@@ -1,14 +1,12 @@
 import os
-from typing import List
+from typing import List, Dict, Tuple
 from openai import OpenAI
-from typing import Dict
 
 # === SETUP OPENAI ===
 # client = OpenAI(api_key="")
 
-def call_llm(prompt, client):
-    """basic function to call the OpenAI API with a given prompt"""
-    
+def call_llm(prompt: str, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+    """Basic function to call the OpenAI API with a given prompt and return (content, tokens)."""
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
@@ -16,15 +14,17 @@ def call_llm(prompt, client):
         max_tokens=64,
     )
     content = response.choices[0].message.content.strip()
-    return content
+    usage = getattr(response, "usage", {}) or {}
+    prompt_t = usage.get("prompt_tokens", 0)
+    compl_t  = usage.get("completion_tokens", 0)
+    total_t  = usage.get("total_tokens", prompt_t + compl_t)  # fallback if missing
+    tokens = {"prompt_tokens": prompt_t, "completion_tokens": compl_t, "total_tokens": total_t}
+    return content, tokens
 
-def action(current_state, current_tree, goal_state, client):
-    """Determine the next action (drill,solve,backtrack) based on the current state and tree"""
-    
-    if not isinstance(current_tree, str):
-        current_tree_str = str(current_tree)
-    else:
-        current_tree_str = current_tree
+
+def action(current_state, current_tree, goal_state, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+    """Determine the next action (drilldown, solve, backtrack) based on the current state and tree."""
+    current_tree_str = current_tree if isinstance(current_tree, str) else str(current_tree)
 
     prompt_action = f"""The current state is {current_state}.
     The current tree is {current_tree_str}.
@@ -38,11 +38,13 @@ def action(current_state, current_tree, goal_state, client):
 
     Return only the name of the action and nothing else.
     """
-    return call_llm(prompt_action, client).lower()
+    content, tokens = call_llm(prompt_action, client)
+    act = content.strip().lower().split()[0].strip(":.")  # robust to punctuation
+    return act, tokens
 
-def solve(current_state, goal_state, client):
-    """Solve the current task directly using the LLM"""
-    
+
+def solve(current_state, goal_state, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+    """Ask the LLM to solve the current task directly."""
     prompt_solve = f""" 
     Here is the goal state: {goal_state}.
     Here is the current task: {current_state}.
@@ -52,62 +54,74 @@ def solve(current_state, goal_state, client):
 
     Respond with the solution or 'no solution'.
     """
-    return call_llm(prompt_solve, client)
+    content, tokens = call_llm(prompt_solve, client)
+    return content, tokens
 
-def is_solved(numbers: List[int], target=24) -> bool:
-    """Check if the current numbers contain the target value (default is 24)"""
-    return any(n == target for n in numbers)
+
+def is_solved(numbers: List[int], target: int = 24) -> bool:
+    """Solved iff a single value remains and it equals the target."""
+    return len(numbers) == 1 and numbers[0] == target
+
 
 def canonical_state(numbers: List[int]) -> str:
-    """Return a canonical string representation of the current state of numbers"""
+    """Canonical string for deduping states."""
     return str(sorted(numbers))
 
+
 def recursive_24game_agent(
-    current_state: List[int], 
+    current_state: List[int],
     current_path: List[str],
     goal_state: int,
     tree: List[str],
     visited: set,
     stats: Dict[str, int],
-    client,
-    depth=0,
-    max_depth=5
-    ):
-    """Recursive agent to solve the 24 game using LLMs"""
+    client: OpenAI,
+    depth: int = 0,
+    max_depth: int = 5,
+    token_list: List[Dict[str, int]] = None,
+) -> Tuple[List[str] | None, List[Dict[str, int]]]:
+    """Recursive agent to solve the 24 game using LLMs, tracking token usage."""
+    if token_list is None:
+        token_list = []
+
     indent = "  " * depth
     print(f"{indent}Current numbers: {current_state}, Path: {current_path}")
 
     if is_solved(current_state, goal_state):
         print(f"{indent}Solved! Path: {current_path}")
-        return current_path
+        return current_path, token_list
 
     state_key = canonical_state(current_state)
     if state_key in visited:
         print(f"{indent}Cycle detected, backtracking.")
-        return None
-    if depth > max_depth:
+        return None, token_list
+    if depth >= max_depth:
         print(f"{indent}Max recursion depth reached, backtracking.")
-        return None
+        return None, token_list
     visited.add(state_key)
 
-    chosen_action = action(current_state, tree, goal_state)
-    print(f"{indent}LM chose action: {chosen_action}")
+    chosen_action, tokens = action(current_state, tree, goal_state, client)
+    token_list.append(tokens)
+    print(f"{indent}LM chose action: {chosen_action} | tokens: {tokens}")
 
     if chosen_action == "solve":
-        stats["solve"] += 1
-        solution = solve(current_state, goal_state)
-        print(f"{indent}LM returned solution: {solution}")
+        stats["solve"] = stats.get("solve", 0) + 1
+        solution, tokens2 = solve(current_state, goal_state, client)
+        token_list.append(tokens2)
+        print(f"{indent}LM returned solution: {solution} | tokens: {tokens2}")
         if solution and "no solution" not in solution.lower():
-            return current_path + [f"solve: {solution}"]
+            return current_path + [f"solve: {solution}"], token_list
         else:
-            return None
+            return None, token_list
 
     elif chosen_action == "drilldown":
-        stats["drilldown"] += 1
-        ops = [('+', lambda x, y: x + y), 
-               ('-', lambda x, y: x - y),
-               ('*', lambda x, y: x * y), 
-               ('/', lambda x, y: x // y if y != 0 and x % y == 0 else None)]
+        stats["drilldown"] = stats.get("drilldown", 0) + 1
+        ops = [
+            ('+', lambda x, y: x + y),
+            ('-', lambda x, y: x - y),
+            ('*', lambda x, y: x * y),
+            ('/', lambda x, y: x // y if y != 0 and x % y == 0 else None),
+        ]
         n = len(current_state)
         found_any = False
         for i in range(n):
@@ -117,55 +131,77 @@ def recursive_24game_agent(
                 for op_name, op in ops:
                     try:
                         new_num = op(current_state[i], current_state[j])
-                        # Only accept integer result (not None)
                         if new_num is None or abs(new_num) > 1e6:
                             continue
                     except Exception:
                         continue
-                    # Ensure new_num is integer
                     if not isinstance(new_num, int):
                         continue
                     new_numbers = [current_state[k] for k in range(n) if k != i and k != j] + [new_num]
                     new_path = current_path + [f"({current_state[i]} {op_name} {current_state[j]}) -> {new_num}"]
                     tree.append(f"{current_state} => {new_numbers}")
-                    result = recursive_24game_agent(new_numbers, new_path, goal_state, tree, visited, stats, client, depth+1, max_depth)
-                    if result:
-                        return result
+                    result_path, _ = recursive_24game_agent(
+                        new_numbers, new_path, goal_state, tree, visited, stats,
+                        client, depth + 1, max_depth, token_list  # pass SAME token_list
+                    )
+                    if result_path:
+                        return result_path, token_list
                     found_any = True
         if not found_any:
             print(f"{indent}No further decompositions possible, backtracking.")
-        return None
+        return None, token_list
 
     elif chosen_action == "backtrack":
-        stats["backtrack"] += 1
+        stats["backtrack"] = stats.get("backtrack", 0) + 1
         print(f"{indent}Backtracking.")
-        return None
+        return None, token_list
+
     else:
         print(f"{indent}Unknown action or LM output: '{chosen_action}', backtracking.")
-        return None
+        return None, token_list
 
-def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], client, goal: int = 24):
-    """Play the 24 game with the given numbers using the LLM agent"""
+
+def _sum_tokens(token_log: List[Dict[str, int]]) -> int:
+    """Sum total tokens with a safe fallback when total_tokens is absent."""
+    total = 0
+    for t in token_log:
+        if not t:
+            continue
+        if isinstance(t.get("total_tokens"), int):
+            total += t["total_tokens"]
+        else:
+            total += t.get("prompt_tokens", 0) + t.get("completion_tokens", 0)
+    return total
+
+
+def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], client: OpenAI, goal: int = 24):
+    """Play the 24 game with the given numbers using the LLM agent."""
     print(f"\n=== Solving 24 Game: {numbers} ===")
-    path = recursive_24game_agent(
-        current_state=numbers, 
-        current_path=[], 
+    path, token_list = recursive_24game_agent(
+        current_state=numbers,
+        current_path=[],
         goal_state=goal,
         tree=[],
         visited=set(),
         stats=stats,
         client=client,
         depth=0,
-        max_depth=5
+        max_depth=5,
+        token_list=[],
     )
-    if path:
+    total_tokens = _sum_tokens(token_list)
+    success = bool(path)
+
+    if success:
         print("\n--- Solution Path ---")
         for step in path:
             print(step)
-        return True
     else:
         print("\nNo solution found.")
-        return False
+    print(f"Tokens used for this problem: {total_tokens}\n")
+
+    return success, total_tokens, token_list
+
 
 if __name__ == "__main__":
     test_problems = [
@@ -173,10 +209,24 @@ if __name__ == "__main__":
         [1, 5, 5, 5],
         [8, 8, 3, 3],
         [3, 3, 8, 8],
-        [1, 3, 4, 6]
+        [1, 3, 4, 6],
     ]
+    stats = {"solve": 0, "drilldown": 0, "backtrack": 0}
+
+    # Instantiate client (or exit early if missing)
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("Set OPENAI_API_KEY in your environment.")
+    client = OpenAI(api_key=api_key)
+
     solved_count = 0
+    all_token_info = []
+
     for nums in test_problems:
-        if play_24game_with_llm(nums):
-            solved_count += 1
+        success, tokens_used, token_log = play_24game_with_llm(nums, stats, client)
+        solved_count += int(success)
+        all_token_info.append({"numbers": nums, "solved": success, "tokens_used": tokens_used})
+
     print(f"\nSolved {solved_count}/{len(test_problems)}. Accuracy: {solved_count/len(test_problems):.2f}")
+    total_tokens = sum(e["tokens_used"] for e in all_token_info)
+    print(f"Total tokens used: {total_tokens}")
