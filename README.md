@@ -1,1 +1,2 @@
-pip install pip install openai==0.28
+Run with:
+python3 main.py > out.txt

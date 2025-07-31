@@ -19,7 +19,7 @@ print(ds["train"][:5])
 
 solved_count = 0
 for i in range(NUM_SAMPLES):
-    print(f"==== Problem {i} ====")
+    print(f"\n\n==== Problem {i} ====")
     problem = ds["train"][i]
     numbers = problem['numbers']
     if gameof24.play_24game_with_llm(numbers=numbers):
