@@ -1,0 +1,365 @@
+
+
+***** 5 samples *****
+
+
+==== Problem 0 ====
+
+=== Solving 24 Game: [1, 1, 1, 8] ===
+Current numbers: [1, 1, 1, 8], Path: []
+LM chose action: drilldown | tokens: {'prompt_tokens': 153, 'completion_tokens': 3, 'total_tokens': 156}
+  Current numbers: [1, 8, 2], Path: ['(1 + 1) -> 2']
+  LM chose action: drilldown | tokens: {'prompt_tokens': 173, 'completion_tokens': 3, 'total_tokens': 176}
+    Current numbers: [2, 9], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 186, 'completion_tokens': 3, 'total_tokens': 189}
+      Current numbers: [11], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(2 + 9) -> 11']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 193, 'completion_tokens': 3, 'total_tokens': 196}
+      No further decompositions possible, backtracking.
+      Current numbers: [-7], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(2 - 9) -> -7']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 203, 'completion_tokens': 3, 'total_tokens': 206}
+      No further decompositions possible, backtracking.
+      Current numbers: [18], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(2 * 9) -> 18']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 213, 'completion_tokens': 3, 'total_tokens': 216}
+      No further decompositions possible, backtracking.
+      Current numbers: [11], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(9 + 2) -> 11']
+      Cycle detected, backtracking.
+      Current numbers: [7], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(9 - 2) -> 7']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 233, 'completion_tokens': 3, 'total_tokens': 236}
+      No further decompositions possible, backtracking.
+      Current numbers: [18], Path: ['(1 + 1) -> 2', '(1 + 8) -> 9', '(9 * 2) -> 18']
+      Cycle detected, backtracking.
+    Current numbers: [2, -7], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 262, 'completion_tokens': 3, 'total_tokens': 265}
+      Current numbers: [-5], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(2 + -7) -> -5']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 269, 'completion_tokens': 3, 'total_tokens': 272}
+      No further decompositions possible, backtracking.
+      Current numbers: [9], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(2 - -7) -> 9']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 279, 'completion_tokens': 3, 'total_tokens': 282}
+      No further decompositions possible, backtracking.
+      Current numbers: [-14], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(2 * -7) -> -14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 289, 'completion_tokens': 3, 'total_tokens': 292}
+      No further decompositions possible, backtracking.
+      Current numbers: [-5], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(-7 + 2) -> -5']
+      Cycle detected, backtracking.
+      Current numbers: [-9], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(-7 - 2) -> -9']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 309, 'completion_tokens': 3, 'total_tokens': 312}
+      No further decompositions possible, backtracking.
+      Current numbers: [-14], Path: ['(1 + 1) -> 2', '(1 - 8) -> -7', '(-7 * 2) -> -14']
+      Cycle detected, backtracking.
+    Current numbers: [2, 8], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 338, 'completion_tokens': 3, 'total_tokens': 341}
+      Current numbers: [10], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(2 + 8) -> 10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 345, 'completion_tokens': 3, 'total_tokens': 348}
+      No further decompositions possible, backtracking.
+      Current numbers: [-6], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(2 - 8) -> -6']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 355, 'completion_tokens': 3, 'total_tokens': 358}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(2 * 8) -> 16']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 365, 'completion_tokens': 3, 'total_tokens': 368}
+      No further decompositions possible, backtracking.
+      Current numbers: [10], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(8 + 2) -> 10']
+      Cycle detected, backtracking.
+      Current numbers: [6], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(8 - 2) -> 6']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 385, 'completion_tokens': 3, 'total_tokens': 388}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(8 * 2) -> 16']
+      Cycle detected, backtracking.
+      Current numbers: [4], Path: ['(1 + 1) -> 2', '(1 * 8) -> 8', '(8 / 2) -> 4']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 405, 'completion_tokens': 3, 'total_tokens': 408}
+      No further decompositions possible, backtracking.
+    Current numbers: [8, 3], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 424, 'completion_tokens': 3, 'total_tokens': 427}
+      Current numbers: [11], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(8 + 3) -> 11']
+      Cycle detected, backtracking.
+      Current numbers: [5], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(8 - 3) -> 5']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 441, 'completion_tokens': 3, 'total_tokens': 444}
+      No further decompositions possible, backtracking.
+      Current numbers: [24], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(8 * 3) -> 24']
+      Solved! Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(8 * 3) -> 24']
+
+--- Solution Path ---
+(1 + 1) -> 2
+(1 + 2) -> 3
+(8 * 3) -> 24
+Tokens used for this problem: 5880
+
+
+
+==== Problem 1 ====
+
+=== Solving 24 Game: [1, 1, 1, 11] ===
+Current numbers: [1, 1, 1, 11], Path: []
+LM chose action: drilldown | tokens: {'prompt_tokens': 153, 'completion_tokens': 3, 'total_tokens': 156}
+  Current numbers: [1, 11, 2], Path: ['(1 + 1) -> 2']
+  LM chose action: drilldown | tokens: {'prompt_tokens': 173, 'completion_tokens': 3, 'total_tokens': 176}
+    Current numbers: [2, 12], Path: ['(1 + 1) -> 2', '(1 + 11) -> 12']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 186, 'completion_tokens': 3, 'total_tokens': 189}
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(1 + 11) -> 12', '(2 + 12) -> 14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 193, 'completion_tokens': 3, 'total_tokens': 196}
+      No further decompositions possible, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(1 + 11) -> 12', '(2 - 12) -> -10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 203, 'completion_tokens': 3, 'total_tokens': 206}
+      No further decompositions possible, backtracking.
+      Current numbers: [24], Path: ['(1 + 1) -> 2', '(1 + 11) -> 12', '(2 * 12) -> 24']
+      Solved! Path: ['(1 + 1) -> 2', '(1 + 11) -> 12', '(2 * 12) -> 24']
+
+--- Solution Path ---
+(1 + 1) -> 2
+(1 + 11) -> 12
+(2 * 12) -> 24
+Tokens used for this problem: 923
+
+
+
+==== Problem 2 ====
+
+=== Solving 24 Game: [1, 1, 1, 12] ===
+Current numbers: [1, 1, 1, 12], Path: []
+LM chose action: drilldown | tokens: {'prompt_tokens': 153, 'completion_tokens': 3, 'total_tokens': 156}
+  Current numbers: [1, 12, 2], Path: ['(1 + 1) -> 2']
+  LM chose action: drilldown | tokens: {'prompt_tokens': 173, 'completion_tokens': 3, 'total_tokens': 176}
+    Current numbers: [2, 13], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 186, 'completion_tokens': 3, 'total_tokens': 189}
+      Current numbers: [15], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(2 + 13) -> 15']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 193, 'completion_tokens': 3, 'total_tokens': 196}
+      No further decompositions possible, backtracking.
+      Current numbers: [-11], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(2 - 13) -> -11']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 203, 'completion_tokens': 3, 'total_tokens': 206}
+      No further decompositions possible, backtracking.
+      Current numbers: [26], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(2 * 13) -> 26']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 213, 'completion_tokens': 3, 'total_tokens': 216}
+      No further decompositions possible, backtracking.
+      Current numbers: [15], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(13 + 2) -> 15']
+      Cycle detected, backtracking.
+      Current numbers: [11], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(13 - 2) -> 11']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 233, 'completion_tokens': 3, 'total_tokens': 236}
+      No further decompositions possible, backtracking.
+      Current numbers: [26], Path: ['(1 + 1) -> 2', '(1 + 12) -> 13', '(13 * 2) -> 26']
+      Cycle detected, backtracking.
+    Current numbers: [2, -11], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 262, 'completion_tokens': 3, 'total_tokens': 265}
+      Current numbers: [-9], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(2 + -11) -> -9']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 269, 'completion_tokens': 3, 'total_tokens': 272}
+      No further decompositions possible, backtracking.
+      Current numbers: [13], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(2 - -11) -> 13']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 279, 'completion_tokens': 3, 'total_tokens': 282}
+      No further decompositions possible, backtracking.
+      Current numbers: [-22], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(2 * -11) -> -22']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 289, 'completion_tokens': 3, 'total_tokens': 292}
+      No further decompositions possible, backtracking.
+      Current numbers: [-9], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(-11 + 2) -> -9']
+      Cycle detected, backtracking.
+      Current numbers: [-13], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(-11 - 2) -> -13']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 309, 'completion_tokens': 3, 'total_tokens': 312}
+      No further decompositions possible, backtracking.
+      Current numbers: [-22], Path: ['(1 + 1) -> 2', '(1 - 12) -> -11', '(-11 * 2) -> -22']
+      Cycle detected, backtracking.
+    Current numbers: [2, 12], Path: ['(1 + 1) -> 2', '(1 * 12) -> 12']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 338, 'completion_tokens': 3, 'total_tokens': 341}
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(1 * 12) -> 12', '(2 + 12) -> 14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 345, 'completion_tokens': 3, 'total_tokens': 348}
+      No further decompositions possible, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(1 * 12) -> 12', '(2 - 12) -> -10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 355, 'completion_tokens': 3, 'total_tokens': 358}
+      No further decompositions possible, backtracking.
+      Current numbers: [24], Path: ['(1 + 1) -> 2', '(1 * 12) -> 12', '(2 * 12) -> 24']
+      Solved! Path: ['(1 + 1) -> 2', '(1 * 12) -> 12', '(2 * 12) -> 24']
+
+--- Solution Path ---
+(1 + 1) -> 2
+(1 * 12) -> 12
+(2 * 12) -> 24
+Tokens used for this problem: 3845
+
+
+
+==== Problem 3 ====
+
+=== Solving 24 Game: [1, 1, 1, 13] ===
+Current numbers: [1, 1, 1, 13], Path: []
+LM chose action: drilldown | tokens: {'prompt_tokens': 153, 'completion_tokens': 3, 'total_tokens': 156}
+  Current numbers: [1, 13, 2], Path: ['(1 + 1) -> 2']
+  LM chose action: drilldown | tokens: {'prompt_tokens': 173, 'completion_tokens': 3, 'total_tokens': 176}
+    Current numbers: [2, 14], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 186, 'completion_tokens': 3, 'total_tokens': 189}
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(2 + 14) -> 16']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 193, 'completion_tokens': 3, 'total_tokens': 196}
+      No further decompositions possible, backtracking.
+      Current numbers: [-12], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(2 - 14) -> -12']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 203, 'completion_tokens': 3, 'total_tokens': 206}
+      No further decompositions possible, backtracking.
+      Current numbers: [28], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(2 * 14) -> 28']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 213, 'completion_tokens': 3, 'total_tokens': 216}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(14 + 2) -> 16']
+      Cycle detected, backtracking.
+      Current numbers: [12], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(14 - 2) -> 12']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 233, 'completion_tokens': 3, 'total_tokens': 236}
+      No further decompositions possible, backtracking.
+      Current numbers: [28], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(14 * 2) -> 28']
+      Cycle detected, backtracking.
+      Current numbers: [7], Path: ['(1 + 1) -> 2', '(1 + 13) -> 14', '(14 / 2) -> 7']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 253, 'completion_tokens': 3, 'total_tokens': 256}
+      No further decompositions possible, backtracking.
+    Current numbers: [2, -12], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 272, 'completion_tokens': 3, 'total_tokens': 275}
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(2 + -12) -> -10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 279, 'completion_tokens': 3, 'total_tokens': 282}
+      No further decompositions possible, backtracking.
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(2 - -12) -> 14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 289, 'completion_tokens': 3, 'total_tokens': 292}
+      No further decompositions possible, backtracking.
+      Current numbers: [-24], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(2 * -12) -> -24']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 299, 'completion_tokens': 3, 'total_tokens': 302}
+      No further decompositions possible, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(-12 + 2) -> -10']
+      Cycle detected, backtracking.
+      Current numbers: [-14], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(-12 - 2) -> -14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 319, 'completion_tokens': 3, 'total_tokens': 322}
+      No further decompositions possible, backtracking.
+      Current numbers: [-24], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(-12 * 2) -> -24']
+      Cycle detected, backtracking.
+      Current numbers: [-6], Path: ['(1 + 1) -> 2', '(1 - 13) -> -12', '(-12 / 2) -> -6']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 339, 'completion_tokens': 3, 'total_tokens': 342}
+      No further decompositions possible, backtracking.
+    Current numbers: [2, 13], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 358, 'completion_tokens': 3, 'total_tokens': 361}
+      Current numbers: [15], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(2 + 13) -> 15']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 365, 'completion_tokens': 3, 'total_tokens': 368}
+      No further decompositions possible, backtracking.
+      Current numbers: [-11], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(2 - 13) -> -11']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 375, 'completion_tokens': 3, 'total_tokens': 378}
+      No further decompositions possible, backtracking.
+      Current numbers: [26], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(2 * 13) -> 26']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 385, 'completion_tokens': 3, 'total_tokens': 388}
+      No further decompositions possible, backtracking.
+      Current numbers: [15], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(13 + 2) -> 15']
+      Cycle detected, backtracking.
+      Current numbers: [11], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(13 - 2) -> 11']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 405, 'completion_tokens': 3, 'total_tokens': 408}
+      No further decompositions possible, backtracking.
+      Current numbers: [26], Path: ['(1 + 1) -> 2', '(1 * 13) -> 13', '(13 * 2) -> 26']
+      Cycle detected, backtracking.
+    Current numbers: [13, 3], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 434, 'completion_tokens': 3, 'total_tokens': 437}
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(13 + 3) -> 16']
+      Cycle detected, backtracking.
+      Current numbers: [10], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(13 - 3) -> 10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 451, 'completion_tokens': 3, 'total_tokens': 454}
+      No further decompositions possible, backtracking.
+      Current numbers: [39], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(13 * 3) -> 39']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 461, 'completion_tokens': 3, 'total_tokens': 464}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(3 + 13) -> 16']
+      Cycle detected, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(3 - 13) -> -10']
+      Cycle detected, backtracking.
+      Current numbers: [39], Path: ['(1 + 1) -> 2', '(1 + 2) -> 3', '(3 * 13) -> 39']
+      Cycle detected, backtracking.
+    Current numbers: [13, -1], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 510, 'completion_tokens': 3, 'total_tokens': 513}
+      Current numbers: [12], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(13 + -1) -> 12']
+      Cycle detected, backtracking.
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(13 - -1) -> 14']
+      Cycle detected, backtracking.
+      Current numbers: [-13], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(13 * -1) -> -13']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 537, 'completion_tokens': 3, 'total_tokens': 540}
+      No further decompositions possible, backtracking.
+      Current numbers: [-13], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(13 / -1) -> -13']
+      Cycle detected, backtracking.
+      Current numbers: [12], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(-1 + 13) -> 12']
+      Cycle detected, backtracking.
+      Current numbers: [-14], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(-1 - 13) -> -14']
+      Cycle detected, backtracking.
+      Current numbers: [-13], Path: ['(1 + 1) -> 2', '(1 - 2) -> -1', '(-1 * 13) -> -13']
+      Cycle detected, backtracking.
+    Current numbers: [13, 2], Path: ['(1 + 1) -> 2', '(1 * 2) -> 2']
+    Cycle detected, backtracking.
+    Current numbers: [2, 14], Path: ['(1 + 1) -> 2', '(13 + 1) -> 14']
+    Cycle detected, backtracking.
+    Current numbers: [2, 12], Path: ['(1 + 1) -> 2', '(13 - 1) -> 12']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 628, 'completion_tokens': 3, 'total_tokens': 631}
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(13 - 1) -> 12', '(2 + 12) -> 14']
+      Cycle detected, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(13 - 1) -> 12', '(2 - 12) -> -10']
+      Cycle detected, backtracking.
+      Current numbers: [24], Path: ['(1 + 1) -> 2', '(13 - 1) -> 12', '(2 * 12) -> 24']
+      Solved! Path: ['(1 + 1) -> 2', '(13 - 1) -> 12', '(2 * 12) -> 24']
+
+--- Solution Path ---
+(1 + 1) -> 2
+(13 - 1) -> 12
+(2 * 12) -> 24
+Tokens used for this problem: 8388
+
+
+
+==== Problem 4 ====
+
+=== Solving 24 Game: [1, 1, 2, 6] ===
+Current numbers: [1, 1, 2, 6], Path: []
+LM chose action: drilldown | tokens: {'prompt_tokens': 153, 'completion_tokens': 3, 'total_tokens': 156}
+  Current numbers: [2, 6, 2], Path: ['(1 + 1) -> 2']
+  LM chose action: drilldown | tokens: {'prompt_tokens': 173, 'completion_tokens': 3, 'total_tokens': 176}
+    Current numbers: [2, 8], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 186, 'completion_tokens': 3, 'total_tokens': 189}
+      Current numbers: [10], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(2 + 8) -> 10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 193, 'completion_tokens': 3, 'total_tokens': 196}
+      No further decompositions possible, backtracking.
+      Current numbers: [-6], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(2 - 8) -> -6']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 203, 'completion_tokens': 3, 'total_tokens': 206}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(2 * 8) -> 16']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 213, 'completion_tokens': 3, 'total_tokens': 216}
+      No further decompositions possible, backtracking.
+      Current numbers: [10], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(8 + 2) -> 10']
+      Cycle detected, backtracking.
+      Current numbers: [6], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(8 - 2) -> 6']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 233, 'completion_tokens': 3, 'total_tokens': 236}
+      No further decompositions possible, backtracking.
+      Current numbers: [16], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(8 * 2) -> 16']
+      Cycle detected, backtracking.
+      Current numbers: [4], Path: ['(1 + 1) -> 2', '(2 + 6) -> 8', '(8 / 2) -> 4']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 253, 'completion_tokens': 3, 'total_tokens': 256}
+      No further decompositions possible, backtracking.
+    Current numbers: [2, -4], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 272, 'completion_tokens': 3, 'total_tokens': 275}
+      Current numbers: [-2], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(2 + -4) -> -2']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 279, 'completion_tokens': 3, 'total_tokens': 282}
+      No further decompositions possible, backtracking.
+      Current numbers: [6], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(2 - -4) -> 6']
+      Cycle detected, backtracking.
+      Current numbers: [-8], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(2 * -4) -> -8']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 299, 'completion_tokens': 3, 'total_tokens': 302}
+      No further decompositions possible, backtracking.
+      Current numbers: [-2], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(-4 + 2) -> -2']
+      Cycle detected, backtracking.
+      Current numbers: [-6], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(-4 - 2) -> -6']
+      Cycle detected, backtracking.
+      Current numbers: [-8], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(-4 * 2) -> -8']
+      Cycle detected, backtracking.
+      Current numbers: [-2], Path: ['(1 + 1) -> 2', '(2 - 6) -> -4', '(-4 / 2) -> -2']
+      Cycle detected, backtracking.
+    Current numbers: [2, 12], Path: ['(1 + 1) -> 2', '(2 * 6) -> 12']
+    LM chose action: drilldown | tokens: {'prompt_tokens': 358, 'completion_tokens': 3, 'total_tokens': 361}
+      Current numbers: [14], Path: ['(1 + 1) -> 2', '(2 * 6) -> 12', '(2 + 12) -> 14']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 365, 'completion_tokens': 3, 'total_tokens': 368}
+      No further decompositions possible, backtracking.
+      Current numbers: [-10], Path: ['(1 + 1) -> 2', '(2 * 6) -> 12', '(2 - 12) -> -10']
+      LM chose action: drilldown | tokens: {'prompt_tokens': 375, 'completion_tokens': 3, 'total_tokens': 378}
+      No further decompositions possible, backtracking.
+      Current numbers: [24], Path: ['(1 + 1) -> 2', '(2 * 6) -> 12', '(2 * 12) -> 24']
+      Solved! Path: ['(1 + 1) -> 2', '(2 * 6) -> 12', '(2 * 12) -> 24']
+
+--- Solution Path ---
+(1 + 1) -> 2
+(2 * 6) -> 12
+(2 * 12) -> 24
+Tokens used for this problem: 3597
+
+
+Solved 5/5. Accuracy: 1.00
+{'solve': 0, 'drilldown': 79, 'backtrack': 0}
+Easy solved: 5 / 5
+Medium solved: 0 / 0
+Hard solved: 0 / 0

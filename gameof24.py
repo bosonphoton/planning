@@ -1,5 +1,5 @@
 import os
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
 
 # === SETUP OPENAI ===
@@ -15,9 +15,10 @@ def call_llm(prompt: str, client: OpenAI) -> Tuple[str, Dict[str, int]]:
     )
     content = response.choices[0].message.content.strip()
     usage = getattr(response, "usage", {}) or {}
-    prompt_t = usage.get("prompt_tokens", 0)
-    compl_t  = usage.get("completion_tokens", 0)
-    total_t  = usage.get("total_tokens", prompt_t + compl_t)  # fallback if missing
+    prompt_t = getattr(usage, "prompt_tokens", 0)
+    compl_t  = getattr(usage, "completion_tokens", 0)
+    total_t  = getattr(usage, "total_tokens", prompt_t + compl_t)
+    
     tokens = {"prompt_tokens": prompt_t, "completion_tokens": compl_t, "total_tokens": total_t}
     return content, tokens
 
@@ -79,7 +80,7 @@ def recursive_24game_agent(
     depth: int = 0,
     max_depth: int = 5,
     token_list: List[Dict[str, int]] = None,
-) -> Tuple[List[str] | None, List[Dict[str, int]]]:
+) -> Tuple[Optional[List[str]], List[Dict[str, int]]]:
     """Recursive agent to solve the 24 game using LLMs, tracking token usage."""
     if token_list is None:
         token_list = []
