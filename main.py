@@ -2,15 +2,18 @@ from datasets import load_dataset
 from typing import Dict
 from openai import OpenAI
 import gameof24
+import os
+from dotenv import load_dotenv
 
+load_dotenv()  # Loads the .env file
 
 NUM_SAMPLES = 200
 
 API_KEYS = [
-    "",
-    "",
-    "",
-    ""
+    os.getenv("OPENAI_API_KEY_1"),
+    os.getenv("OPENAI_API_KEY_2"),
+    os.getenv("OPENAI_API_KEY_3"),
+    os.getenv("OPENAI_API_KEY_4")
 ]
 
 def make_client(api_key):
