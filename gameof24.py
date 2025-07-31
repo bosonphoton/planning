@@ -3,9 +3,11 @@ import os
 from typing import List
 
 # === SETUP OPENAI ===
-openai.api_key = ""
+# openai.api_key = ""
 
 def call_llm(prompt):
+    """basic function to call the OpenAI API with a given prompt"""
+    
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
@@ -16,41 +18,47 @@ def call_llm(prompt):
     return content
 
 def action(current_state, current_tree, goal_state):
+    """Determine the next action (drill,solve,backtrack) based on the current state and tree"""
+    
     if not isinstance(current_tree, str):
         current_tree_str = str(current_tree)
     else:
         current_tree_str = current_tree
 
     prompt_action = f"""The current state is {current_state}.
-The current tree is {current_tree_str}.
-The goal state is {goal_state}.
+    The current tree is {current_tree_str}.
+    The goal state is {goal_state}.
 
-Choose from one of the actions below for the current state to get closer to the goal state:
+    Choose from one of the actions below for the current state to get closer to the goal state:
 
-- drilldown: break the current state into even smaller more manageable subtasks (by combining two numbers with +, -, *, or /, but division must result in an integer)
-- solve: solve the task directly if it is simple enough
-- backtrack: the current path of decomposition or attempted solution is unproductive, it can return to a previous step and try a different approach to solving
+    - drilldown: break the current state into even smaller more manageable subtasks (by combining two numbers with +, -, *, or /, but division must result in an integer)
+    - solve: solve the task directly if it is simple enough
+    - backtrack: the current path of decomposition or attempted solution is unproductive, it can return to a previous step and try a different approach to solving
 
-Return only the name of the action and nothing else.
-"""
+    Return only the name of the action and nothing else.
+    """
     return call_llm(prompt_action).lower()
 
 def solve(current_state, goal_state):
+    """Solve the current task directly using the LLM"""
+    
     prompt_solve = f""" 
-Here is the goal state: {goal_state}.
-Here is the current task: {current_state}.
+    Here is the goal state: {goal_state}.
+    Here is the current task: {current_state}.
 
-The solution for this current task will be used in part to reach the goal state.
-Solve the current task directly. Use only integer arithmetic.
+    The solution for this current task will be used in part to reach the goal state.
+    Solve the current task directly. Use only integer arithmetic.
 
-Respond with the solution or 'no solution'.
-"""
+    Respond with the solution or 'no solution'.
+    """
     return call_llm(prompt_solve)
 
 def is_solved(numbers: List[int], target=24) -> bool:
+    """Check if the current numbers contain the target value (default is 24)"""
     return any(n == target for n in numbers)
 
 def canonical_state(numbers: List[int]) -> str:
+    """Return a canonical string representation of the current state of numbers"""
     return str(sorted(numbers))
 
 def recursive_24game_agent(
@@ -61,7 +69,9 @@ def recursive_24game_agent(
     visited: set,
     depth=0,
     max_depth=5
-):
+    ):
+    """Recursive agent to solve the 24 game using LLMs"""
+    
     indent = "  " * depth
     print(f"{indent}Current numbers: {current_state}, Path: {current_path}")
 
@@ -130,6 +140,7 @@ def recursive_24game_agent(
         return None
 
 def play_24game_with_llm(numbers: List[int], goal: int = 24):
+    """Play the 24 game with the given numbers using the LLM agent"""
     print(f"\n=== Solving 24 Game: {numbers} ===")
     path = recursive_24game_agent(
         current_state=numbers, 
