@@ -1,20 +1,20 @@
-import openai
 import os
 from typing import List
+from openai import OpenAI
 
 # === SETUP OPENAI ===
-# openai.api_key = ""
+client = OpenAI(api_key="")
 
 def call_llm(prompt):
     """basic function to call the OpenAI API with a given prompt"""
     
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
         max_tokens=64,
     )
-    content = response['choices'][0]['message']['content'].strip()
+    content = response.choices[0].message.content.strip()
     return content
 
 def action(current_state, current_tree, goal_state):
