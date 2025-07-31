@@ -1,4 +1,4 @@
 Run with:
 python3 main.py > out.txt
 
-msg to get env file
+- msg me to get env file if u dont have the api keys
