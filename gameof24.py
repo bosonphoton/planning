@@ -1,8 +1,9 @@
 import openai
+import os
 from typing import List
 
 # === SETUP OPENAI ===
-openai.api_key = "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"
+openai.api_key = ""
 
 def call_llm(prompt):
     response = openai.ChatCompletion.create(
