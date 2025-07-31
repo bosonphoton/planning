@@ -1,6 +1,7 @@
 import os
 from typing import List
 from openai import OpenAI
+from typing import Dict
 
 # === SETUP OPENAI ===
 client = OpenAI(api_key="")
@@ -67,11 +68,11 @@ def recursive_24game_agent(
     goal_state: int,
     tree: List[str],
     visited: set,
+    stats: Dict[str, int],
     depth=0,
     max_depth=5
     ):
     """Recursive agent to solve the 24 game using LLMs"""
-    
     indent = "  " * depth
     print(f"{indent}Current numbers: {current_state}, Path: {current_path}")
 
@@ -92,6 +93,7 @@ def recursive_24game_agent(
     print(f"{indent}LM chose action: {chosen_action}")
 
     if chosen_action == "solve":
+        stats["solve"] += 1
         solution = solve(current_state, goal_state)
         print(f"{indent}LM returned solution: {solution}")
         if solution and "no solution" not in solution.lower():
@@ -100,6 +102,7 @@ def recursive_24game_agent(
             return None
 
     elif chosen_action == "drilldown":
+        stats["drilldown"] += 1
         ops = [('+', lambda x, y: x + y), 
                ('-', lambda x, y: x - y),
                ('*', lambda x, y: x * y), 
@@ -124,7 +127,7 @@ def recursive_24game_agent(
                     new_numbers = [current_state[k] for k in range(n) if k != i and k != j] + [new_num]
                     new_path = current_path + [f"({current_state[i]} {op_name} {current_state[j]}) -> {new_num}"]
                     tree.append(f"{current_state} => {new_numbers}")
-                    result = recursive_24game_agent(new_numbers, new_path, goal_state, tree, visited, depth+1, max_depth)
+                    result = recursive_24game_agent(new_numbers, new_path, goal_state, tree, visited, stats, depth+1, max_depth)
                     if result:
                         return result
                     found_any = True
@@ -133,13 +136,14 @@ def recursive_24game_agent(
         return None
 
     elif chosen_action == "backtrack":
+        stats["backtrack"] += 1
         print(f"{indent}Backtracking.")
         return None
     else:
         print(f"{indent}Unknown action or LM output: '{chosen_action}', backtracking.")
         return None
 
-def play_24game_with_llm(numbers: List[int], goal: int = 24):
+def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], goal: int = 24):
     """Play the 24 game with the given numbers using the LLM agent"""
     print(f"\n=== Solving 24 Game: {numbers} ===")
     path = recursive_24game_agent(
@@ -148,6 +152,7 @@ def play_24game_with_llm(numbers: List[int], goal: int = 24):
         goal_state=goal,
         tree=[],
         visited=set(),
+        stats=stats,
         depth=0,
         max_depth=5
     )
