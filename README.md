@@ -10,6 +10,10 @@ Run with together:
 python main.py --provider together --model_name deepseek-ai/DeepSeek-V3 --num_samples 200 &> output_together_deepseek_v3.resultlog
 ```
 
+Run the baseline with openai:
+```python
+python main24_baseline.py --provider openai --model_name gpt-4o --num_samples 5
+```
 
 
 * Before you start *
