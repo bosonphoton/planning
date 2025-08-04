@@ -3,10 +3,10 @@ import sympy
 from typing import Tuple, Dict
 from openai import OpenAI
 
-def call_llm(prompt: str, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+def call_llm(prompt: str, client: OpenAI, model_name: str) -> Tuple[str, Dict[str, int]]:
     """Basic function to call the OpenAI API with a given prompt and return (content, tokens)."""
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model_name,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
         max_tokens=64,
@@ -47,7 +47,7 @@ def evaluate_24_solution(input_numbers: str, llm_output: str) -> Tuple[bool, str
         return False, f"Could not parse expression: {e}"
 
 
-def solve24_oneshot(input_numbers: str, client: OpenAI) -> Tuple[str, Dict[str, int], Tuple[bool, str]]:
+def solve24_oneshot(input_numbers: str, client: OpenAI, model_name: str) -> Tuple[str, Dict[str, int], Tuple[bool, str]]:
     """Ask the LLM to solve the current task directly, and evaluate correctness."""
 
     prompt_solve = f"""Use numbers and basic arithmetic operations (+ - * /) to obtain 24.
@@ -64,7 +64,7 @@ def solve24_oneshot(input_numbers: str, client: OpenAI) -> Tuple[str, Dict[str, 
     Input: {input_numbers}
     """
 
-    content, tokens = call_llm(prompt_solve, client)
+    content, tokens = call_llm(prompt_solve, client, model_name)
     is_correct, message = evaluate_24_solution(input_numbers, content)
     return content, tokens, (is_correct, message)
 

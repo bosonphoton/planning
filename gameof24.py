@@ -5,10 +5,10 @@ from openai import OpenAI
 # === SETUP OPENAI ===
 # client = OpenAI(api_key="")
 
-def call_llm(prompt: str, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+def call_llm(prompt: str, client: OpenAI, model_name: str) -> Tuple[str, Dict[str, int]]:
     """Basic function to call the OpenAI API with a given prompt and return (content, tokens)."""
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model_name,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
         max_tokens=64,
@@ -23,7 +23,7 @@ def call_llm(prompt: str, client: OpenAI) -> Tuple[str, Dict[str, int]]:
     return content, tokens
 
 
-def action(current_state, current_tree, goal_state, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+def action(current_state, current_tree, goal_state, client: OpenAI, model_name: str) -> Tuple[str, Dict[str, int]]:
     """Determine the next action (drilldown, solve, backtrack) based on the current state and tree."""
     current_tree_str = current_tree if isinstance(current_tree, str) else str(current_tree)
 
@@ -39,12 +39,12 @@ def action(current_state, current_tree, goal_state, client: OpenAI) -> Tuple[str
 
     Return only the name of the action and nothing else.
     """
-    content, tokens = call_llm(prompt_action, client)
+    content, tokens = call_llm(prompt_action, client, model_name)
     act = content.strip().lower().split()[0].strip(":.")  # robust to punctuation
     return act, tokens
 
 
-def solve(current_state, goal_state, client: OpenAI) -> Tuple[str, Dict[str, int]]:
+def solve(current_state, goal_state, client: OpenAI, model_name: str) -> Tuple[str, Dict[str, int]]:
     """Ask the LLM to solve the current task directly."""
     prompt_solve = f""" 
     Here is the goal state: {goal_state}.
@@ -55,7 +55,7 @@ def solve(current_state, goal_state, client: OpenAI) -> Tuple[str, Dict[str, int
 
     Respond with the solution or 'no solution'.
     """
-    content, tokens = call_llm(prompt_solve, client)
+    content, tokens = call_llm(prompt_solve, client, model_name)
     return content, tokens
 
 
@@ -77,6 +77,7 @@ def recursive_24game_agent(
     visited: set,
     stats: Dict[str, int],
     client: OpenAI,
+    model_name: str,
     depth: int = 0,
     max_depth: int = 5,
     token_list: List[Dict[str, int]] = None,
@@ -101,13 +102,13 @@ def recursive_24game_agent(
         return None, token_list
     visited.add(state_key)
 
-    chosen_action, tokens = action(current_state, tree, goal_state, client)
+    chosen_action, tokens = action(current_state, tree, goal_state, client, model_name)
     token_list.append(tokens)
     print(f"{indent}LM chose action: {chosen_action} | tokens: {tokens}")
 
     if chosen_action == "solve":
         stats["solve"] = stats.get("solve", 0) + 1
-        solution, tokens2 = solve(current_state, goal_state, client)
+        solution, tokens2 = solve(current_state, goal_state, client, model_name)
         token_list.append(tokens2)
         print(f"{indent}LM returned solution: {solution} | tokens: {tokens2}")
         if solution and "no solution" not in solution.lower():
@@ -143,7 +144,7 @@ def recursive_24game_agent(
                     tree.append(f"{current_state} => {new_numbers}")
                     result_path, _ = recursive_24game_agent(
                         new_numbers, new_path, goal_state, tree, visited, stats,
-                        client, depth + 1, max_depth, token_list  # pass SAME token_list
+                        client, model_name, depth + 1, max_depth, token_list  # pass SAME token_list
                     )
                     if result_path:
                         return result_path, token_list
@@ -175,7 +176,7 @@ def _sum_tokens(token_log: List[Dict[str, int]]) -> int:
     return total
 
 
-def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], client: OpenAI, goal: int = 24):
+def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], model_name: str, client: OpenAI, goal: int = 24):
     """Play the 24 game with the given numbers using the LLM agent."""
     print(f"\n=== Solving 24 Game: {numbers} ===")
     path, token_list = recursive_24game_agent(
@@ -186,6 +187,7 @@ def play_24game_with_llm(numbers: List[int], stats: Dict[str, int], client: Open
         visited=set(),
         stats=stats,
         client=client,
+        model_name=model_name,
         depth=0,
         max_depth=5,
         token_list=[],

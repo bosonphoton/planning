@@ -1,4 +1,5 @@
 openai>=1.0,<2.0
 datasets
 python-dotenv
+together>=1.5.11,<2.0
 sympy
