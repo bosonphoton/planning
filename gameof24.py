@@ -59,6 +59,34 @@ def solve(current_state, goal_state, client: OpenAI, model_name: str) -> Tuple[s
     return content, tokens
 
 
+def llm_drilldown(current_state: List[int], client: OpenAI, model_name: str) -> Tuple[Optional[Tuple[int, int, str]], Dict[str, int]]:
+    """
+    Ask the LLM to propose a single decomposition: which two numbers to combine, and with which operation.
+    Returns (i, j, op) if possible, else None.
+    """
+    prompt = f"""
+    You are helping to solve the 24 game. Here are the current numbers: {current_state}.
+    Pick two different numbers from the list, and one operation (+, -, *, or /) to combine them into a new number (using integer division only, i.e., x / y is valid only if x % y == 0).
+    Return your answer in the format: i, j, op
+    where i and j are the **indices** of the numbers in the list (0-based), and op is one of '+', '-', '*', '/'.
+    If no legal moves are possible, return 'no move'.
+    """
+    content, tokens = call_llm(prompt, client, model_name)
+    answer = content.strip().lower()
+    if "no move" in answer:
+        return None, tokens
+    try:
+        i, j, op = answer.replace(" ", "").split(",")
+        i, j = int(i), int(j)
+        assert op in "+-*/"
+        return (i, j, op), tokens
+    except Exception:
+        # LLM gave unexpected output
+        return None, tokens
+
+
+
+
 def is_solved(numbers: List[int], target: int = 24) -> bool:
     """Solved iff a single value remains and it equals the target."""
     return len(numbers) == 1 and numbers[0] == target
@@ -118,40 +146,39 @@ def recursive_24game_agent(
 
     elif chosen_action == "drilldown":
         stats["drilldown"] = stats.get("drilldown", 0) + 1
-        ops = [
-            ('+', lambda x, y: x + y),
-            ('-', lambda x, y: x - y),
-            ('*', lambda x, y: x * y),
-            ('/', lambda x, y: x // y if y != 0 and x % y == 0 else None),
-        ]
-        n = len(current_state)
-        found_any = False
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    continue
-                for op_name, op in ops:
-                    try:
-                        new_num = op(current_state[i], current_state[j])
-                        if new_num is None or abs(new_num) > 1e6:
-                            continue
-                    except Exception:
-                        continue
-                    if not isinstance(new_num, int):
-                        continue
-                    new_numbers = [current_state[k] for k in range(n) if k != i and k != j] + [new_num]
-                    new_path = current_path + [f"({current_state[i]} {op_name} {current_state[j]}) -> {new_num}"]
-                    tree.append(f"{current_state} => {new_numbers}")
-                    result_path, _ = recursive_24game_agent(
-                        new_numbers, new_path, goal_state, tree, visited, stats,
-                        client, model_name, depth + 1, max_depth, token_list  # pass SAME token_list
-                    )
-                    if result_path:
-                        return result_path, token_list
-                    found_any = True
-        if not found_any:
-            print(f"{indent}No further decompositions possible, backtracking.")
+        move, tokens2 = llm_drilldown(current_state, client,model_name)
+        token_list.append(tokens2)
+        if move is None:
+            print(f"{indent}No further decompositions possible (LLM said 'no move'), backtracking.")
+            return None, token_list
+        i, j, op_name = move
+        ops = {
+            '+': lambda x, y: x + y,
+            '-': lambda x, y: x - y,
+            '*': lambda x, y: x * y,
+            '/': lambda x, y: x // y if y != 0 and x % y == 0 else None,
+        }
+        try:
+            new_num = ops[op_name](current_state[i], current_state[j])
+            if new_num is None or abs(new_num) > 1e6:
+                return None, token_list
+        except Exception:
+            return None, token_list
+        if not isinstance(new_num, int):
+            return None, token_list
+        new_numbers = [current_state[k] for k in range(len(current_state)) if k != i and k != j] + [new_num]
+        new_path = current_path + [f"({current_state[i]} {op_name} {current_state[j]}) -> {new_num}"]
+        tree.append(f"{current_state} => {new_numbers}")
+        result_path, _ = recursive_24game_agent(
+            new_numbers, new_path, goal_state, tree, visited, stats,
+            client, model_name, depth + 1, max_depth, token_list  # pass SAME token_list
+        )
+        
+        if result_path:
+            return result_path, token_list
+        print(f"{indent}LLM drilldown did not lead to solution, backtracking.")
         return None, token_list
+
 
     elif chosen_action == "backtrack":
         stats["backtrack"] = stats.get("backtrack", 0) + 1
